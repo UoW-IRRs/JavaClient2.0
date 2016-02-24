@@ -1530,6 +1530,11 @@ public class SWORDClient
                 try
                 {
                     client.addCredentials(auth.getTarget(), auth.getRealm(), "basic", unpw);
+                    if (log.isDebugEnabled())
+                    {
+                        log.debug("Enabling preemptive authentication");
+                    }
+                    client.usePreemptiveAuthentication(true);
                 }
                 catch (URISyntaxException e)
                 {

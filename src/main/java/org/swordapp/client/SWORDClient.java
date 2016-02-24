@@ -11,7 +11,10 @@ import org.apache.abdera.protocol.client.AbderaClient;
 import org.apache.abdera.protocol.client.ClientResponse;
 import org.apache.abdera.protocol.client.RequestOptions;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.methods.FileRequestEntity;
 import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
+import org.apache.commons.httpclient.methods.RequestEntity;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -19,6 +22,7 @@ import org.jsoup.select.Elements;
 
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -339,7 +343,12 @@ public class SWORDClient
             http.addPackaging(options, deposit.getPackaging());
 
             // prepare the content to be delivered
-            InputStreamRequestEntity media = new InputStreamRequestEntity(deposit.getFile(), deposit.getMimeType());
+            RequestEntity media;
+            if (StringUtils.isNotEmpty(deposit.getFullPath())) {
+                media = new FileRequestEntity(new File(deposit.getFullPath()), deposit.getMimeType());
+            } else {
+                media = new InputStreamRequestEntity(deposit.getFile(), deposit.getMimeType());
+            }
 
             // carry out the deposit
             if (log.isDebugEnabled())

@@ -1,6 +1,6 @@
 package org.swordapp.client;
 
-import java.io.InputStream;
+import java.io.*;
 
 public class Deposit
 {
@@ -13,6 +13,7 @@ public class Deposit
     private String packaging;
     private boolean inProgress = false;
     private boolean metadataRelevant = false;
+    private String fullPath = null;
 
 	public Deposit() {}
 
@@ -79,6 +80,11 @@ public class Deposit
     public void setFile(InputStream file)
     {
         this.file = file;
+    }
+
+    public void setFile(File file) throws IOException {
+        this.file = new FileInputStream(file);
+        setFullPath(file.getCanonicalPath());
     }
 
     public String getFilename()
@@ -160,4 +166,8 @@ public class Deposit
 	{
 		this.metadataRelevant = metadataRelevant;
 	}
+
+    public void setFullPath(String fullPath) { this.fullPath = fullPath; }
+
+    public String getFullPath() { return fullPath; }
 }
